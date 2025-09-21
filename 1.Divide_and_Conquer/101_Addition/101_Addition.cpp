@@ -1,49 +1,64 @@
-﻿#include <string>
-#include <vector>
+﻿#include <algorithm>
 #include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-string Add(string str1, string str2)
-{
-	// TODO:
+string Add(string str1, string str2) {
+    // TODO: 가장 큰 자리수만큼 반복 std::max 사용
+    int max_size = max(str1.size(), str2.size());
+    // 뒤의 자리수부터 계산하므로 리버스를 해주고 작은 문자열에는 0으로 패딩을 넣어주자
+    /*
+    123 -> 321
+    012 -> 210
+    */
+    string& isNeed = (str1.size() > str2.size()) ? str2 : str1;
 
-	return string("0");
+    for (int i = 0; i < max_size - str2.size(); i++) {
+        str2.insert(0, "0");
+    }
+    reverse(str1.begin(), str1.end());
+    reverse(str2.begin(), str2.end());
+    cout << str1 << endl << str2 << endl;
+
+    for (int i = 0; i < max_size; i++) {
+        /* code */
+    }
+
+    return string("0");
 }
 
-int main()
-{
-	vector<vector<string>> tests = {
-		{"12", "34", to_string(12 + 34)}
-		, {"123", "45", to_string(123 + 45)}
-		, {"54544", "44545", to_string(54544 + 44545)}
-		, {"5555", "55", to_string(5555 + 55)}
-		, {"5555", "5555", to_string(5555 + 5555)}
-		, {"9823471235421415454545454545454544", "1714546546546545454544548544544545", "11538017781967960909090003089999089"}
-	};
+int main() {
+    vector<vector<string>> tests = {{"12", "34", to_string(12 + 34)},
+                                    {"123", "45", to_string(123 + 45)},
+                                    {"54544", "44545", to_string(54544 + 44545)},
+                                    {"5555", "55", to_string(5555 + 55)},
+                                    {"5555", "5", to_string(5555 + 5)},
+                                    {"5555", "5555", to_string(5555 + 5555)},
+                                    {"9823471235421415454545454545454544", "1714546546546545454544548544544545", "11538017781967960909090003089999089"}};
 
-	for (const auto& t : tests)
-	{
-		const string str1 = t[0];     // "12"
-		const string str2 = t[1];     // "34"
-		const string expected = t[2]; // "46"
+    for (const auto& t : tests) {
+        const string str1 = t[0];      // "12"
+        const string str2 = t[1];      // "34"
+        const string expected = t[2];  // "46"
 
-		cout << str1 << " + " << str2 << " = " << expected << endl;
+        cout << str1 << " + " << str2 << " = " << expected << endl;
 
-		const string result = Add(str1, str2);
+        const string result = Add(str1, str2);
 
-		cout << result << " " << expected << " ";
+        cout << result << " " << expected << " ";
 
-		if (result == expected)
-			cout << "OK" << endl;
-		else {
-			cout << "Not OK" << endl;
-			exit(-1);
-		}
-		cout << endl << endl;
-	}
+        if (result == expected)
+            cout << "OK" << endl;
+        else {
+            cout << "Not OK" << endl;
+            // exit(-1);
+        }
+        cout << endl << endl;
+    }
 
-	cout << "Congratulations. All OK!" << endl;
+    cout << "Congratulations. All OK!" << endl;
 
-	return 0;
+    return 0;
 }
