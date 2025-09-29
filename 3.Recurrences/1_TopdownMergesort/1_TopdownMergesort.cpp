@@ -37,7 +37,7 @@ class TopDownMerge {
         Print(arr, start, end);
 
         int i = start, j = mid + 1;
-
+        if (arr[mid] <= arr[j]) return;  // 최선의 경우 밑의 복사과정이 필요없음
         for (int k = start; k <= end; k++) aux[k] = arr[k];
 
         for (int k = start; k <= end; k++) {
@@ -78,7 +78,7 @@ class TopDownMerge {
 int main() {
     vector<int> my_vector(16);
     std::iota(my_vector.begin(), my_vector.end(), 0);
-    std::reverse(my_vector.begin(), my_vector.end());
+    // std::reverse(my_vector.begin(), my_vector.end());
 
     cout << "        ";
     Print(my_vector, 0, my_vector.size() - 1);
