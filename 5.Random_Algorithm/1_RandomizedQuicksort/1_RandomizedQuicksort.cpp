@@ -47,7 +47,13 @@ void RandomizedQuicksort(vector<int>& arr, int start, int end) {
     Print(arr, start, end);
 
     // TODO:
-    RandomizedPartition(arr, start, end);
+    int i = 0;
+
+    if (start < end) {
+        int mid = RandomizedPartition(arr, start, end);
+        RandomizedQuicksort(arr, start, mid - 1);
+        RandomizedQuicksort(arr, mid + 1, end);
+    }
 }
 
 int main() {
