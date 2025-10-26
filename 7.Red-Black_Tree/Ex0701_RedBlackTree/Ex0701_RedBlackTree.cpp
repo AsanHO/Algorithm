@@ -81,21 +81,27 @@ class RedBlackBST {
     Value Search(Node* x, Key key) {
         if (x == nullptr) return -1;  // 편의상 못 찾았을 경우 -1 반환
 
-        // if (key < x->key) TODO:
-        // else if (key > x->key) TODO:
-        // else return x->val;
-        return -1;  // TODO: 삭제
+        if (key < x->key) {
+            return Search(x->left, key);
+        }
+        if (key > x->key) {
+            return Search(x->right, key);
+
+            return x->val;
+        }
     }
 
     // 이진트리 복습
     bool Contains(Key key) { return Contains(root, key); }
     bool Contains(Node* x, Key key) {
         if (x == nullptr) return false;
-
-        // if (key < x->key) TODO:
-        // else if (key > x->key) TODO:
-        // else return true;
-        return false;  // 삭제
+        if (key < x->key) {
+            return Search(x->left, key);
+        }
+        if (key > x->key) {
+            return Search(x->right, key);
+        }
+        return true;
     }
 
     // 키(key)가 가장 작은 노드 찾기 (이진트리 복습)
@@ -104,8 +110,8 @@ class RedBlackBST {
         return Min(root)->key;
     }
     Node* Min(Node* x) {
-        // return TODO:
-        return nullptr;  // 삭제
+        if (x->left) Min(x->left);
+        return x;
     }
 
     // 키(key)가 가장 큰 노드 찾기 (이진트리 복습)
@@ -114,15 +120,15 @@ class RedBlackBST {
         return Max(root)->key;
     }
     Node* Max(Node* x) {
-        // return TODO:
-        return nullptr;  // 삭제
+        if (x->right) Min(x->right);
+        return x;
     }
 
     // AVL과 비슷
     Node* RotateLeft(Node* h) {
         Node* x = h->right;  // 회전 후에 부모 자리로 올라갈 노드
-        // h->right = TODO
-        // x->left = TODO
+        h->right = x->left;
+        x->left = h;
         x->color = h->color;
         h->color = Color::kRed;  // 일단 레드로 설정 후 나중에 수정
         x->size = h->size;
@@ -133,8 +139,8 @@ class RedBlackBST {
     // AVL과 비슷
     Node* RotateRight(Node* h) {
         Node* x = h->left;  // 회전 후에 부모 자리로 올라갈 노드
-        // h->left = TODO
-        // x->right = TODO
+        h->left = x->right;
+        x->right = h;
         x->color = h->color;
         h->color = Color::kRed;  // 일단 레드로 설정 후 나중에 수정
         x->size = h->size;
@@ -159,19 +165,31 @@ class RedBlackBST {
     Node* Balance(Node* h)  // restore red-black tree invariant
     {
         assert(h != nullptr);
-
+        // cout << "Balance : " << h->key << endl;
+        // Print2D(root);
         // 아래 힌트
         // 1. IsRed()에서 널노드는 블랙으로 간주(false 반환)
         // 2. else-if가 아니라 if
 
         // 오른쪽이 레드이고 왼쪽은 레드가 아니면?
-        // if (TODO) h = TODO
+        if (!IsRed(h->left) && IsRed(h->right)) {
+            // cout << h->key << "에서 좌회전" << endl;
+            h = Balance(RotateLeft(h));
+        }
 
         // 왼쪽과 왼쪽의 왼쪽이 둘 다 레드이면?
         // if (TODO) h = TODO
+        if (IsRed(h->left) && IsRed(h->left->left)) {
+            // cout << h->key << "에서 우회전" << endl;
+            h = Balance(RotateRight(h));
+        }
 
         // 왼쪽, 오른쪽이 둘 다 레드이면?
         // if (TODO) TODO
+        if (IsRed(h->left) && IsRed(h->right)) {
+            // cout << h->key << "자식 둘다 레드" << endl;
+            FlipColors(h);
+        }
 
         h->size = Size(h->left) + Size(h->right) + 1;
 
@@ -385,19 +403,19 @@ int main() {
     {
         RedBlackBST bst;
 
-        string keys = string("SEARCHXMPL");
+        // string keys = string("SEARCHXMPL");
+        string keys = string("ACEHLMPRSX");
 
         for (char c : keys) {
             cout << "Insert: " << string(1, c) << endl;
             bst.Insert(string(1, c), int(c));
-            // bst.Print2D();
+            bst.Print2D();
         }
 
-        //// Search 테스트
-        // for (char c : keys)
-        //{
-        //	cout << c << " " << int(c) << " " << bst.Search(string(1, c)) << endl;
-        // }
+        // Search 테스트
+        for (char c : keys) {
+            cout << c << " " << int(c) << " " << bst.Search(string(1, c)) << endl;
+        }
 
         bst.Print2D();
 
