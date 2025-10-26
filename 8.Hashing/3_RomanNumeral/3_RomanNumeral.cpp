@@ -6,55 +6,56 @@ using namespace std;
 // LeetCode: Roman to Integer
 // https://leetcode.com/problems/roman-to-integer/description/
 
-int RomanToInt(string s)
-{
-	unordered_map<char, int> m;
+int RomanToInt(string s) {
+    unordered_map<char, int> m;
 
-	m['I'] = 1;
-	m['V'] = 5;
-	m['X'] = 10;
-	m['L'] = 50;
-	m['C'] = 100;
-	m['D'] = 500;
-	m['M'] = 1000;
+    m['I'] = 1;
+    m['V'] = 5;
+    m['X'] = 10;
+    m['L'] = 50;
+    m['C'] = 100;
+    m['D'] = 500;
+    m['M'] = 1000;
 
-	int ans = 0;
+    int ans = 0;
 
-	for (int i = 0; i < s.length(); i++)
-	{
-		// TODO:
-	}
+    for (int i = 0; i < s.length(); i++) {
+        // TODO:
+        if (i < s.length() - 1 && m[s[i]] < m[s[i + 1]]) {
+            ans -= m[s[i]];
+            continue;
+        }
+        ans += m[s[i]];
+    }
 
-	cout << s << " = " << ans << endl;
-
-	return ans;
+    cout << s << " = " << ans << endl;
+    return ans;
 }
 
-int main()
-{
-	RomanToInt("II");
+int main() {
+    RomanToInt("II");
 
-	RomanToInt("III");
+    RomanToInt("III");
 
-	RomanToInt("XII");
+    RomanToInt("XII");
 
-	RomanToInt("XXVII");
+    RomanToInt("XXVII");
 
-	RomanToInt("IV");
+    RomanToInt("IV");
 
-	RomanToInt("IX");
+    RomanToInt("IX");
 
-	RomanToInt("XL");
+    RomanToInt("XL");
 
-	RomanToInt("XC");
+    RomanToInt("XC");
 
-	RomanToInt("CD");
+    RomanToInt("CD");
 
-	RomanToInt("CM");
+    RomanToInt("CM");
 
-	RomanToInt("LVIII");
+    RomanToInt("LVIII");
 
-	RomanToInt("MCMXCIV");
+    RomanToInt("MCMXCIV");
 
-	return 0;
+    return 0;
 }
