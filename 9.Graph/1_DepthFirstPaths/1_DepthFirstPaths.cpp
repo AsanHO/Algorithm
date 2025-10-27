@@ -65,9 +65,23 @@ class Graph {
     // 힌트: 인수 path는 호출될때마다 매번 복사가 됩니다.
     void DepthFirstPathHelper(Vertex* source, Vertex* sink, vector<Vertex*> path) {
         path.push_back(source);
-        PrintPath(path);
 
+        PrintPath(path);
+        if (source == sink) {
+            cout << "Found : ";
+            PrintPath(path);
+            path.clear();
+            return;
+        }
+
+        source->visited = true;
         // TODO:
+        for (Vertex* availablePath : source->out_neighbors) {
+            if (!availablePath->visited) {
+                DepthFirstPathHelper(availablePath, sink, path);
+            }
+        }
+        source->visited = false;
     }
 
     void PrintPath(vector<Vertex*> path) {
