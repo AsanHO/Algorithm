@@ -72,6 +72,15 @@ class Graph {
         cout << "On stack: ";
         for (int i = 0; i < on_stack.size(); i++)
             if (on_stack[i]) cout << i << " ";
+
+        cout << endl;
+        for (auto* t : prev) {
+            if (t) {
+                cout << t->index << " ";
+            } else {
+                cout << "N" << " ";
+            }
+        }
         cout << endl;
 
         for (auto* v_out : v->out_neighbors) {
@@ -86,6 +95,7 @@ class Graph {
                 cout << "Cycle detected: " << v_out->index << endl;
                 // TODO: 싸이클 저장, 이것도 Kevin Bacon 예제 복습
                 for (Vertex* v_ptr = v; v_ptr != v_out; v_ptr = prev[v_ptr->index]) {
+                    cout << v_ptr->index << " : " << v_out->index << endl;
                     cycle.push_back(v_ptr);  // v부터 vout전까지 돌리기
                 }
                 cycle.push_back(v_out);
