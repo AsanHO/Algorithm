@@ -27,9 +27,9 @@ class Graph {
         vertices[v]->out_neighbors.push_back(vertices[w]);
     }
 
-    void AddBiEdge(int v, int w) {
-        vertices[v]->out_neighbors.push_back(vertices[w]);
-        vertices[w]->out_neighbors.push_back(vertices[v]);
+    void AddBiEdge(int v, int v_out) {
+        vertices[v]->out_neighbors.push_back(vertices[v_out]);
+        vertices[v_out]->out_neighbors.push_back(vertices[v]);
     }
 
     void DFS(int source) {
@@ -56,7 +56,7 @@ class Graph {
         for (auto* v : vertices) {
             DetectCycle(v);
 
-            if (!cycle.empty()) {
+            if (!cycle.empty()) {  // 사이클이 있다면
                 cout << "Cycle detected" << endl;
                 PrintCycle(cycle);  // 출력할 때 역순으로 출력합니다.
                 return;             // 싸이클을 하나라도 발견시 종료
