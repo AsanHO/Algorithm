@@ -23,7 +23,7 @@ class Graph {
         for (auto* v : vertices) delete v;
     }
 
-    void AddDiEdge(int v, int v_out) { vertices[v]->out_neighbors.push_back(vertices[v_out]); }
+    void AddDiEdge(int v, int w) { vertices[v]->out_neighbors.push_back(vertices[w]); }
 
     void AddBiEdge(int v, int v_out) {
         vertices[v]->out_neighbors.push_back(vertices[v_out]);
@@ -40,16 +40,16 @@ class Graph {
     void DFS(Vertex* source) {
         cout << source->index << " ";
         source->visited = true;
-        for (auto* v_out : source->out_neighbors)
-            if (!v_out->visited) DFS(v_out);
+        for (auto* w : source->out_neighbors)
+            if (!w->visited) DFS(w);
     }
 
-    void DetectCycle() {  // 시작
+    void DetectCycle() {
         prev.resize(vertices.size(), nullptr);
         on_stack.resize(vertices.size(), false);
         cycle.clear();
 
-        for (auto* v : vertices) v->visited = false;  // 모든 정점의 연결된 정점 방문 처리 제거
+        for (auto* v : vertices) v->visited = false;
 
         for (auto* v : vertices) {
             DetectCycle(v);
@@ -84,15 +84,16 @@ class Graph {
         cout << endl;
 
         for (auto* v_out : v->out_neighbors) {
+            cout << "prev : " << v_out->index << endl;
             if (!cycle.empty())
                 return;
             else if (!v_out->visited) {
-                // TODO: prev[TODO] = TODO; // Kevin Bacon 예제 복습
-                prev[v_out->index] = v;
+                prev[v_out->index] = v;  // Kevin Bacon 예제 복습
                 DetectCycle(v_out);
-            } else if (on_stack[v_out->index])  // 싸이클 발견! 방문을 한 이웃정점이 스택에 있다면
+            } else if (prev[v_out->index] == v)  // 싸이클 발견!
             {
                 cout << "Cycle detected: " << v_out->index << endl;
+
                 // TODO: 싸이클 저장, 이것도 Kevin Bacon 예제 복습
                 for (Vertex* v_ptr = v; v_ptr != v_out; v_ptr = prev[v_ptr->index]) {
                     cout << v_ptr->index << " : " << v_out->index << endl;
@@ -100,6 +101,8 @@ class Graph {
                 }
                 cycle.push_back(v_out);
                 cycle.push_back(v);
+            } else {
+                cout << "병신샷" << endl;
             }
         }
 
