@@ -39,6 +39,7 @@ class Graph {
     void DFS(Vertex* v) {
         // TODO:
         v->visited = true;
+        id[v->value] = count;
         cout << v->value << "방문 처리" << endl;
         for (Vertex* v_out : v->out_neighbors) {
             if (!v_out->visited) {
