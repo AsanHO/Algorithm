@@ -4,6 +4,9 @@
     "ostream": "cpp",
     "vector": "cpp",
     "queue": "cpp",
-    "deque": "cpp"
+    "deque": "cpp",
+    "__split_buffer": "cpp",
+    "string": "cpp",
+    "list": "cpp"
   }
 }
