@@ -75,7 +75,7 @@ class Graph {
             }
         }
         // [2,1,0]을 리턴해야함
-        stack testRevPost = revPost;
+        stack<Vertex*> testRevPost = revPost;
         cout << "리턴 스택 : " << endl;
         while (!testRevPost.empty()) {
             cout << testRevPost.top()->value << " ";
@@ -162,16 +162,21 @@ int main() {
     {
         // Sedgewick Ch4.2 p.582 jobs.txt 예제
         // 가장 왼쪽의 과목이 나머지의 선수과목인 예제입니다.
-        // 예: "Algorithms"가 "Theoretical CS", "Databases", "Scientific Computing" 세 과목의 선수과목
-        vector<vector<string>> jobs = {{"Algorithms", "Theoretical CS", "Databases", "Scientific Computing"},
-                                       {"Introduction to CS", "Advanced Programming", "Algorithms"},
-                                       {"Advanced Programming", "Scientific Computing"},
-                                       {"Scientific Computing", "Computational Biology"},
-                                       {"Theoretical CS", "Computational Biology", "Artificial Intelligence"},
-                                       {"Linear Algebra", "Theoretical CS"},
-                                       {"Calculus", "Linear Algebra"},
-                                       {"Artificial Intelligence", "Neural Networks", "Robotics", "Machine Learning"},
-                                       {"Machine Learning", "Neural Networks"}};
+        // 예: "Algorithms"가 "Theoretical CS", "Databases", "Scientific
+        // Computing" 세 과목의 선수과목
+        vector<vector<string>> jobs = {
+            {"Algorithms", "Theoretical CS", "Databases",
+             "Scientific Computing"},
+            {"Introduction to CS", "Advanced Programming", "Algorithms"},
+            {"Advanced Programming", "Scientific Computing"},
+            {"Scientific Computing", "Computational Biology"},
+            {"Theoretical CS", "Computational Biology",
+             "Artificial Intelligence"},
+            {"Linear Algebra", "Theoretical CS"},
+            {"Calculus", "Linear Algebra"},
+            {"Artificial Intelligence", "Neural Networks", "Robotics",
+             "Machine Learning"},
+            {"Machine Learning", "Neural Networks"}};
 
         vector<string> values;  // int -> string
         map<string, int> map;   // string -> int
@@ -200,7 +205,8 @@ int main() {
         g.PrecedenceCheck(my_stack);
 
         while (!my_stack.empty()) {
-            cout << values[my_stack.top()->value] << " " << my_stack.top()->value << endl;
+            cout << values[my_stack.top()->value] << " "
+                 << my_stack.top()->value << endl;
             my_stack.pop();
         }
 
