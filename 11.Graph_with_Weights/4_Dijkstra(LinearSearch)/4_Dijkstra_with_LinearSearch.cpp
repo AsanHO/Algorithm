@@ -57,17 +57,16 @@ class DijkstraShortestPaths {
           visited(g.num_vertices, false) {
         dist[s] = 0.0;  // 자기자신과의 거리는 0
 
-        pq.push(pair<double, int>{0.0, s});  // {dist, vertex index} 우선순위 큐라서 dist가 필요
-
         PrintIndex(dist);
         PrintDist(dist);
 
-        while (!pq.empty()) {
-            int v = pq.top().second;  // pair<double, int> 중에서 int 부분
-            pq.pop();
+        while (true) {
+            int v = FindMinVertex();
 
-            if (visited[v]) continue;  // 중복 방문 방지
-            // cout << "visit : " << v << endl;
+            if (v < 0) break;
+
+            cout << "Visit " << v << endl;
+
             visited[v] = true;
 
             Relax(g, v);
@@ -76,31 +75,36 @@ class DijkstraShortestPaths {
         PrintPaths();  // 최단 경로 출력
     }
 
+    int FindMinVertex() {
+        // TODO: 아직 방문하지 않은 정점들 중에서 dist가 가장 작은 것의 인덱스를 반환
+        double min_dst = numeric_limits<double>::infinity();
+        int v = -1;
+        for (int i = 0; i < dist.size(); i++) {
+            if (!visited[i] && dist[i] < min_dst) {
+                min_dst = dist[i];
+                v = i;
+            }
+        }
+        return v;
+    }
+
     // 여기서 Relax는 점점 긴장을 풀어간다는 의미입니다.
     // 정답을 한 번에 찾는 방식이 아니라 반복(iteration)하면서
     // 제약 조건을 조금씩 완화시켜간다는 표현입니다.
-
     void Relax(EdgeWeightedDigraph& g, int v) {
+        cout << v << endl;
+
+        // TODO:
         for (DirectedEdge out : g.Adj(v)) {
             // cout << out.From() << " -> " << out.To() << " = " << out.Weight() << endl;
-
-            // dist[v]: s에서 v까지 오기 위해 현재까지 발견된 최소거리 경로
-            // v에서 다시 w로 이동할 경우 dist 업데이트
-
             int w = out.To();
-
-            double new_dist = dist[out.From()] + out.Weight();
-            // cout << new_dist << endl;
-
-            if (dist[w] > new_dist)  // w까지 오는 새로운 최단 경로 발견
-            {
-                dist[w] = new_dist;
-                prev[w] = out.From();  // 최단 경로 기록
-
-                // TODO: pq 사용
-                pq.push(pair<double, int>{new_dist, w});
+            double newDist = dist[v] + out.Weight();
+            if (dist[w] > newDist) {
+                prev[w] = out.From();
+                dist[w] = newDist;
             }
         }
+        PrintDist(dist);
     }
 
     void PrintIndex(vector<double>& dist) {
@@ -143,8 +147,6 @@ class DijkstraShortestPaths {
     vector<int> prev;      // 최단 경로 기록
     vector<double> dist;   // 거리 기록
     vector<bool> visited;  // 방문했는지 기록
-
-    priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
 };
 
 int main() {
