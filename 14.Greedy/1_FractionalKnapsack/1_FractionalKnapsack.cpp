@@ -36,6 +36,17 @@ double FractionalKnapsack(vector<Item> items, double W) {
 
     for (auto& i : items) {
         // TODO:
+        // 넣을 수 있는 양
+        double take = std::min(W, i.weight);
+        W -= take;
+        vsum += take * i.value / i.weight;
+
+        // Trace (진행 과정 출력)
+        i.weight -= take;
+        cout << "W = " << W << ", vsum = " << vsum << endl;
+        Print(items);
+
+        if (W <= 0.0) break;
     }
 
     return vsum;

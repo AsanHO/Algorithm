@@ -15,6 +15,7 @@ struct Node {
 struct Compare {
     bool operator()(Node* l, Node* r) {
         // TODO:
+        if (l->freq > r->freq) return true;
         return false;
     }
 };
@@ -37,18 +38,22 @@ void HuffmanCoding(vector<char> data, vector<int> freq) {
     for (int i = 0; i < data.size(); ++i)
         heap.push(new Node{string(1, data[i]), freq[i]});
 
-    /*
-    while (heap.size() != 1)
-    {
-            Node* left, * right, * top;
+    while (heap.size() != 1) {
+        Node *left, *right, *top;
 
-            // TODO:
+        // TODO:
+        left = heap.top();
+        heap.pop();
+        right = heap.top();
+        heap.pop();
+        top = new Node{left->data + right->data, left->freq + right->freq, left,
+                       right};
 
-            cout << "(" << left->data << ", " << left->freq << ") + (" <<
-    right->data << ", " << right->freq << ") -> "; cout << "(" << top->data <<
-    ", " << top->freq << ")" << endl;
+        heap.push(top);
+        cout << "(" << left->data << ", " << left->freq << ") + ("
+             << right->data << ", " << right->freq << ") -> ";
+        cout << "(" << top->data << ", " << top->freq << ")" << endl;
     }
-    */
 
     PrintCodes(heap.top(), "");
 }
