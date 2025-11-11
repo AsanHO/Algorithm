@@ -18,7 +18,6 @@ int main() {
 
     while (!pq.Empty()) {
         cout << "(" << pq.MinKey() << ", " << pq.MinIndex() << ") ";
-
         pq.DelMin();
     }
     cout << endl;

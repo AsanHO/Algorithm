@@ -1,10 +1,11 @@
-﻿#include <iomanip>
+﻿#include <deque>
+#include <iomanip>
 #include <iostream>
 #include <limits>
 #include <list>
-#include <queue>
 #include <vector>
 
+#include "../2_IndexMinPQ/IndexMinPQ.h"
 using namespace std;
 
 // 간선을 저장하는 구조 사용 (문제에 따라 적절한 자료구조 사용)
@@ -54,23 +55,16 @@ class DijkstraShortestPaths {
     DijkstraShortestPaths(EdgeWeightedDigraph& g, int s)
         : prev(g.num_vertices, -1),
           dist(g.num_vertices, numeric_limits<double>::infinity()),  // 일단 전부 무한대 거리로 초기화
-          visited(g.num_vertices, false) {
+          pq(g.num_vertices) {
         dist[s] = 0.0;  // 자기자신과의 거리는 0
 
-        pq.push(pair<double, int>{0.0, s});  // {dist, vertex index} 우선순위 큐라서 dist가 필요
+        pq.Insert(s, dist[s]);  //{0,0.0}삽입
 
         PrintIndex(dist);
         PrintDist(dist);
 
-        while (!pq.empty()) {
-            int v = pq.top().second;  // pair<double, int> 중에서 int 부분
-            pq.pop();
-
-            if (visited[v]) continue;  // 중복 방문 방지
-            // cout << "visit : " << v << endl;
-            visited[v] = true;
-
-            Relax(g, v);
+        while (!pq.Empty()) {
+            Relax(g, pq.DelMin());
         }
 
         PrintPaths();  // 최단 경로 출력
@@ -81,6 +75,10 @@ class DijkstraShortestPaths {
     // 제약 조건을 조금씩 완화시켜간다는 표현입니다.
 
     void Relax(EdgeWeightedDigraph& g, int v) {
+        cout << v << endl;
+
+        // 인접 edge들 중에서 가장 가까운 것을 이용해서 업데이트
+
         for (DirectedEdge out : g.Adj(v)) {
             // cout << out.From() << " -> " << out.To() << " = " << out.Weight() << endl;
 
@@ -90,7 +88,6 @@ class DijkstraShortestPaths {
             int w = out.To();
 
             double new_dist = dist[out.From()] + out.Weight();
-            // cout << new_dist << endl;
 
             if (dist[w] > new_dist)  // w까지 오는 새로운 최단 경로 발견
             {
@@ -98,9 +95,16 @@ class DijkstraShortestPaths {
                 prev[w] = out.From();  // 최단 경로 기록
 
                 // TODO: pq 사용
-                pq.push(pair<double, int>{new_dist, w});
+                if (pq.Contains(w)) {
+                    pq.ChangeKey(w, new_dist);
+                } else {
+                    pq.Insert(w, new_dist);
+                }
             }
+            // PrintPaths();  // 최단 경로 출력
         }
+
+        PrintDist(dist);
     }
 
     void PrintIndex(vector<double>& dist) {
@@ -140,11 +144,10 @@ class DijkstraShortestPaths {
     }
 
    private:
-    vector<int> prev;      // 최단 경로 기록
-    vector<double> dist;   // 거리 기록
-    vector<bool> visited;  // 방문했는지 기록
+    vector<int> prev;     // 최단 경로 기록
+    vector<double> dist;  // 거리 기록
 
-    priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
+    IndexMinPQ<double> pq;
 };
 
 int main() {
