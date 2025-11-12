@@ -2,7 +2,7 @@
 #include <limits>
 #include <vector>
 
-#include "../11.Graph_with_Weights/2_IndexMinPQ/IndexMinPQ.h"
+#include "../IndexMinPQ.h"
 using namespace std;
 
 constexpr double kInf = numeric_limits<double>::infinity();
@@ -28,41 +28,49 @@ class EdgeWeightedDigraph {
     vector<DirectedEdge>& Adj(int v) { return adj[v]; }
 
     void PrimMST() {
-        int V = int(adj.size());
+        int V = int(adj.size());  // 9
 
-        vector<double> key(
-            V, kInf);  // dist in Sedgewick Algorithm 4.7, key in CLRS p. 596
-        vector<int> pre(V);  // pi in CLRS
+        vector<double> keys(V, kInf);  // dist in Sedgewick Algorithm 4.7, keys in CLRS p. 596
+        vector<int> pre(V);            // pi in CLRS
 
         double cost_sum = 0.0;
 
-        key[0] = 0.0;
+        keys[0] = 0.0;
         pre[0] = -1;
 
         IndexMinPQ<double> pq(V);
 
         // TODO: 우선순위큐에다가 일단 모든 정점의 인덱스를 넣는다.
-        //       위에서 key[0] = 0.0 이기 때문에 0번이 가장 위로 온다.
+        //       위에서 keys[0] = 0.0 이기 때문에 0번이 가장 위로 온다.
+        int i = 0;
+        for (double key : keys) {
+            pq.Insert(i, key);
+            i++;
+        }
+        // pq.Print();
 
         while (!pq.Empty()) {
             int u = pq.DelMin();
 
             if (pre[u] >= 0) {
-                cost_sum += key[u];
-                cout << pre[u] << " - " << u << " : " << key[u] << endl;
+                cost_sum += keys[u];
+                cout << pre[u] << " - " << u << " : " << keys[u] << endl;
             }
 
             for (DirectedEdge& e : Adj(u)) {
+                // cout << e.u << " -> " << e.v << " = " << e.weight << endl;
                 int v = e.v;
                 double weight = e.weight;  // u-v 간선 비용
 
                 // if( TODO: v가 pq안에 아직 있는지 && u-v 비용이 더 적은지)
-                //{
-                //	pre[v] = u;
-                //	key[v] = weight;
-                //	pq.ChangeKey(v, weight);
-                //}
+                if (pq.Contains(v) && keys[v] > weight) {
+                    // cout << v << "가 pq안에 존재" << endl;
+                    pre[v] = u;
+                    keys[v] = weight;
+                    pq.ChangeKey(v, weight);
+                }
             }
+            // pq.Print();
         }
 
         cout << cost_sum << endl;
@@ -71,9 +79,7 @@ class EdgeWeightedDigraph {
 
 int main() {
     vector<DirectedEdge> edges = {
-        {0, 1, 4.0}, {0, 7, 9.0}, {1, 2, 8.0}, {1, 7, 11.0}, {2, 3, 7.0},
-        {2, 5, 4.0}, {2, 8, 2.0}, {3, 4, 9.0}, {3, 5, 14.0}, {4, 5, 10.0},
-        {5, 6, 2.0}, {6, 7, 1.0}, {6, 8, 6.0}, {7, 8, 7.0},
+        {0, 1, 4.0}, {0, 7, 9.0}, {1, 2, 8.0}, {1, 7, 11.0}, {2, 3, 7.0}, {2, 5, 4.0}, {2, 8, 2.0}, {3, 4, 9.0}, {3, 5, 14.0}, {4, 5, 10.0}, {5, 6, 2.0}, {6, 7, 1.0}, {6, 8, 6.0}, {7, 8, 7.0},
     };
 
     EdgeWeightedDigraph g(9);
