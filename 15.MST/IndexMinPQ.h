@@ -121,7 +121,7 @@ class IndexMinPQ {
         qp[pq[j]] = j;
     }
 
-    bool isGreaterA2B(int i, int j) { return keys[pq[i]] > keys[pq[j]]; }
+    bool Greater(int i, int j) { return keys[pq[i]] > keys[pq[j]]; }
 
     void Swim(int k) {
         while (k > 1 && Greater(k / 2, k)) {
@@ -139,6 +139,7 @@ class IndexMinPQ {
             k = j;
         }
     }
+
     void Print() {
         using namespace std;
         cout << "Index: ";
